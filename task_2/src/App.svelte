@@ -1,47 +1,40 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import type { IData } from './inteface.ts'
+  import { getRatio } from "./API/api";
+  import Input from "./components/input.svelte";
+  import Select from "./components/select.svelte";
+  let data: IData = {}
+  let isLoad = false
+  let firstSelectData = ''
+  let secondSelectData = ''
+  let firstInput = 1
+  let secondInput = 0
+  onload = async () => {
+    data = await getRatio('RUB')
+    firstSelectData = Object.keys(data)[0]
+    secondSelectData = 'USD'
+    secondInput = firstInput * data[secondSelectData]
+    isLoad = true
+  }
+  $: if(firstSelectData) {
+    fetchData()
+  }
+  $: if (secondSelectData) {
+    secondInput = firstInput * data[secondSelectData]
+  }
+  async function fetchData() {
+    data = await getRatio(firstSelectData)
+    secondInput = firstInput * data[secondSelectData]
+  }
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+  {#if !isLoad}
+    <p>Loading...</p>
+  {:else}
+    <Input bind:value={firstInput} />
+    <Select options={Object.keys(data)} bind:selectedOption={firstSelectData}/>
+    <Input bind:value={secondInput} />
+    <Select options={Object.keys(data)} bind:selectedOption={secondSelectData}/>
+  {/if}
 </main>
-
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
-</style>
