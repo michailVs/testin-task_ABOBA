@@ -20,7 +20,17 @@
     fetchData()
   }
   $: if (secondSelectData) {
-    secondInput = firstInput * data[secondSelectData]
+    number('second')
+  }
+  $: if (secondInput) {
+    number('first')
+  }
+  function number(numTitle = 'first') {
+    if (numTitle === 'first') {
+      firstInput = secondInput / data[secondSelectData]
+    } else if (numTitle === 'second') {
+      secondInput = firstInput * data[secondSelectData]
+    }
   }
   async function fetchData() {
     data = await getRatio(firstSelectData)
