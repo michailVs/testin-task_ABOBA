@@ -26,8 +26,22 @@ function decoded(arr, dict) {
         })
         tempArr.push(obj)
     })
+    // First option
+    // let unical = []
+    // Object.keys(unicalId).forEach(id => unicalId[id] > 1 ? 0 : unical.push(id)) // [numberId , ...]
+
+    // Second option
+    // let unical = []
+    // Object.keys(unicalId).forEach(id => unicalId[id] > 1 ? 0 : unical.push(dict[+id])) // [wordId , ...]
+
+    // Third option
+    // let unical = {}
+    // Object.keys(unicalId).forEach(id => unicalId[id] > 1 ? 0 : unical[id] = unicalId[id]) // {numberId: count}
+
+    // Fourth option
     let unical = {}
-    Object.keys(unicalId).forEach(id => unicalId[id] > 1 ? 0 : unical[dict[+id]] = unicalId[id])
+    Object.keys(unicalId).forEach(id => unicalId[id] > 1 ? 0 : unical[dict[+id]] = unicalId[id]) // {wordId: count}
+    
     return {decode: tempArr, unicalId: unical}
 }
 console.log(decoded(encoded, translations))
