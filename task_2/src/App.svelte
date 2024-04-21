@@ -25,6 +25,9 @@
   $: if (secondInput) {
     number('first')
   }
+  $: if (firstInput) {
+    number('second')
+  }
   function number(numTitle = 'first') {
     if (numTitle === 'first') {
       firstInput = secondInput / data[secondSelectData]
